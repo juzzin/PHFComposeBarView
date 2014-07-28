@@ -75,6 +75,13 @@ extern NSString *const PHFComposeBarViewFrameEndUserInfoKey;          // NSValue
 // is set. Thus, to hide the button, set this property to nil.
 @property (strong, nonatomic) UIImage *utilityButtonImage UI_APPEARANCE_SELECTOR;
 
+@property (strong, nonatomic, readonly) UIButton *textViewUtilityButton;
+
+// Default is nil. Images should be white on transparent background. The side
+// length should not exceed 16 points. The button is only visible when an image
+// is set. Thus, to hide the button, set this property to nil.
+@property (strong, nonatomic) UIImage *textViewUtilityButtonImage UI_APPEARANCE_SELECTOR;
+
 - (void)setText:(NSString *)text animated:(BOOL)animated;
 
 @end
@@ -85,6 +92,7 @@ extern NSString *const PHFComposeBarViewFrameEndUserInfoKey;          // NSValue
 @optional
 - (void)composeBarViewDidPressButton:(PHFComposeBarView *)composeBarView;
 - (void)composeBarViewDidPressUtilityButton:(PHFComposeBarView *)composeBarView;
+- (void)composeBarViewDidPressTextViewUtilityButton:(PHFComposeBarView *)composeBarView;
 - (void)composeBarView:(PHFComposeBarView *)composeBarView
    willChangeFromFrame:(CGRect)startFrame
                toFrame:(CGRect)endFrame

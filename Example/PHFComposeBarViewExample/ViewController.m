@@ -100,6 +100,10 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
     [self prependTextToTextView:@"Utility button pressed"];
 }
 
+- (void)composeBarViewDidPressTextViewUtilityButton:(PHFComposeBarView *)composeBarView {
+    [self prependTextToTextView:@"Text View Utility button pressed"];
+}
+
 - (void)composeBarView:(PHFComposeBarView *)composeBarView
    willChangeFromFrame:(CGRect)startFrame
                toFrame:(CGRect)endFrame
@@ -147,6 +151,7 @@ CGRect const kInitialViewFrame = { 0.0f, 0.0f, 320.0f, 480.0f };
         [_composeBarView setMaxLinesCount:5];
         [_composeBarView setPlaceholder:@"Type something..."];
         [_composeBarView setUtilityButtonImage:[UIImage imageNamed:@"Camera"]];
+        [_composeBarView setTextViewUtilityButtonImage:[UIImage imageNamed:@"Happy"]];
         [_composeBarView setDelegate:self];
     }
 

@@ -245,6 +245,15 @@ static CGFloat kTextViewToSuperviewHeightDelta;
     [self updateUtilityButtonVisibility];
 }
 
+- (UIImage *)textViewUtilityButtonImage {
+    return [[self textViewUtilityButton] imageForState:UIControlStateNormal];
+}
+
+- (void)setTextViewUtilityButtonImage:(UIImage *)image {
+    [[self textViewUtilityButton] setImage:image forState:UIControlStateNormal];
+    [self updateTextViewUtilityButtonVisibility];
+}
+
 #pragma mark - Public Methods
 
 - (void)setText:(NSString *)text animated:(BOOL)animated {
@@ -428,6 +437,21 @@ static CGFloat kTextViewToSuperviewHeightDelta;
     return _utilityButton;
 }
 
+@synthesize textViewUtilityButton = _textViewUtilityButton;
+- (UIButton *)textViewUtilityButton {
+    if (!_textViewUtilityButton) {
+        _textViewUtilityButton = [PHFComposeBarView_Button buttonWithType:UIButtonTypeCustom];
+        [_textViewUtilityButton setAutoresizingMask:UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin];
+        [_textViewUtilityButton setFrame:CGRectMake(0.0f,
+                                            [self bounds].size.height - kUtilityButtonHeight - kUtilityButtonBottomMargin,
+                                            kUtilityButtonWidth - 5,
+                                            kUtilityButtonHeight - 5)];
+        [_textViewUtilityButton addTarget:self action:@selector(didPressTextViewUtilityButton) forControlEvents:UIControlEventTouchUpInside];
+    }
+    
+    return _textViewUtilityButton;
+}
+
 #pragma mark - Helpers
 
 - (void)calculateRuntimeConstants {
@@ -449,6 +473,11 @@ static CGFloat kTextViewToSuperviewHeightDelta;
 - (void)didPressUtilityButton {
     if ([[self delegate] respondsToSelector:@selector(composeBarViewDidPressUtilityButton:)])
         [[self delegate] composeBarViewDidPressUtilityButton:self];
+}
+
+- (void)didPressTextViewUtilityButton {
+    if ([[self delegate] respondsToSelector:@selector(composeBarViewDidPressTextViewUtilityButton:)])
+        [[self delegate] composeBarViewDidPressTextViewUtilityButton:self];
 }
 
 - (void)updatePlaceholderVisibility {
@@ -685,6 +714,27 @@ static CGFloat kTextViewToSuperviewHeightDelta;
     [self scrollToCaretIfNeeded];
     [self updateCharCountLabel];
     [self updateButtonEnabled];
+}
+
+- (void)updateTextViewUtilityButtonVisibility {
+    if ([self textViewUtilityButtonImage] && ![[self textViewUtilityButton] superview]) {
+        [self insertTextViewUtilityButton];
+    } else if (![self textViewUtilityButtonImage] && [[self textViewUtilityButton] superview]) {
+        [self removeTextViewUtilityButton];
+    }
+}
+
+- (void)insertTextViewUtilityButton {
+    UIButton *button = [self textViewUtilityButton];
+    CGRect buttonFrame = [button frame];
+    buttonFrame.origin.x = CGRectGetMinX(self.button.frame) - CGRectGetWidth(self.textViewUtilityButton.frame) - kHorizontalSpacing - 2;
+    buttonFrame.origin.y = [self frame].size.height - kUtilityButtonHeight - kUtilityButtonBottomMargin + 2;
+    [button setFrame:buttonFrame];
+    [self addSubview:button];
+}
+
+- (void)removeTextViewUtilityButton {
+    [[self textViewUtilityButton] removeFromSuperview];
 }
 
 @end
